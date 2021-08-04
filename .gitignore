@@ -1,0 +1,12 @@
+__pycache__
+data
+*.pyc
+Training_Results
+wandb
+diva_main.py
+cars196
+cub200
+online_products
+.vscode
+*.jpg
+.nvimlog
