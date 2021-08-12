@@ -4,5 +4,5 @@ arch=${3:-resnet50_frozen_normalize}
 
 python test_diml.py --dataset $dataset \
               --seed 0 --bs 16 --data_sampler class_random --samples_per_class 2\
-              --arch $arch \
+              --arch $arch --group diml_test \
               --embed_dim $embed_dim --evaluate_on_gpu \
