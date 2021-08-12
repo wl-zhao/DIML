@@ -2,6 +2,8 @@
 
 This code contains the implementation for paper **Towards Interpretable Deep Metric Learning with Structural Matching**.
 
+![intro](figs/intro.gif)
+
 ## Usage
 ### Requirement
 - python3
