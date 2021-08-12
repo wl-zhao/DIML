@@ -1,5 +1,5 @@
 # DIML
-Created by [Wenliang Zhao](https://thu-jw.github.io/), [Yongming Rao](https://raoyongming.github.io/), [Ziyi Wang](https://github.com/LavenderLA), [Jiwen Lu](https://scholar.google.com/citations?user=TN8uDQoAAAAJ&hl=en&authuser=1), [Jie Zhou](https://scholar.google.com/citations?user=6a79aPwAAAAJ&hl=en&authuser=1)
+Created by [Wenliang Zhao](https://wl-zhao.github.io/), [Yongming Rao](https://raoyongming.github.io/), [Ziyi Wang](https://github.com/LavenderLA), [Jiwen Lu](https://scholar.google.com/citations?user=TN8uDQoAAAAJ&hl=en&authuser=1), [Jie Zhou](https://scholar.google.com/citations?user=6a79aPwAAAAJ&hl=en&authuser=1)
 
 This repository contains PyTorch implementation for paper **Towards Interpretable Deep Metric Learning with Structural Matching**.
 
@@ -13,18 +13,30 @@ We present a deep interpretable metric learning (DIML) that adopts a structural 
 - PyTorch 1.7
 
 ### Dataset Preparation
-Please follow the instruction in [RevisitDML](https://github.com/Confusezius/Revisiting_Deep_Metric_Learning_PyTorch) to download the datasets and put all the datasets in `data` folder.
+Please follow the instruction in [RevisitDML](https://github.com/Confusezius/Revisiting_Deep_Metric_Learning_PyTorch) to download the datasets and put all the datasets in `data` folder. The structure should be:
+```
+data
+├── cars196
+│   └── images
+├── cub200
+│   └── images
+└── online_products
+    ├── images
+    └── Info_Files
+```
 
 ### Training & Evaluation
 To train the baseline models, run the scripts in `scripts/baselines`. For example:
 ```bash
 CUDA_VISIBLE_DEVICES=0 ./script/baselines/cub_runs.sh
 ```
+The checkpoints are saved in Training_Results folder.
 
-To test the baseline models with our proposed DIML, first edit the checkpoint path in `test_diml.py`, then run
+To test the baseline models with our proposed DIML, first edit the checkpoint paths in `test_diml.py`, then run
 ```bash
 CUDA_VISIBLE_DEVICES=0 ./scripts/diml/test_diml.sh cub200
 ```
+The results will be written to `test_results/test_diml_<dataset>.csv` in CSV format.
 
 You can also incorporate DIML into the training objectives. We provide two examples which apply DIML to  Margin and Multi-Similarity loss. To train DIML models, run
 ```bash
