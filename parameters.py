@@ -35,16 +35,6 @@ def basic_training_parameters(parser):
     parser.add_argument('--not_pretrained',   action='store_true',                              help='Flag. If set, no ImageNet pretraining is used to initialize the network.')
     parser.add_argument('--arch',             default='resnet50_frozen_normalize',  type=str,   help='Underlying network architecture. Frozen denotes that \
                                                                                                   exisiting pretrained batchnorm layers are frozen, and normalize denotes normalization of the output embedding.')
-    parser.add_argument('--r1', type=int, default=16)
-    parser.add_argument('--r2', type=int, default=4)
-    parser.add_argument('--sep', type=int, default=1)
-    parser.add_argument('--dropout', type=float, default=None)
-    parser.add_argument('--train_att', action='store_true', default=False)
-    parser.add_argument('--train_dist', type=str, default='l2', choices=['l2', 'cosine'])
-    parser.add_argument('--test_dist', type=str, default='cosine', choices=['l2', 'cosine'])
-    parser.add_argument('--num_levels', type=int, default=2, choices=[1, 2, 3])
-    parser.add_argument('--num_trunc1', type=int, default=1000)
-    parser.add_argument('--num_trunc2', type=int, default=500)
     parser.add_argument('--use_uniform', default=False, action='store_true')
 
 

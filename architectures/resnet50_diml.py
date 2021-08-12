@@ -10,8 +10,6 @@ class Network(torch.nn.Module):
         super(Network, self).__init__()
 
         self.pars  = opt
-        self.r1 = opt.r1
-        self.r2 = opt.r2
         self.model = ptm.__dict__['resnet50'](num_classes=1000, pretrained='imagenet' if not opt.not_pretrained else None)
 
         self.name = opt.arch
@@ -26,11 +24,6 @@ class Network(torch.nn.Module):
         self.layer_blocks = nn.ModuleList([self.model.layer1, self.model.layer2, self.model.layer3, self.model.layer4])
 
         self.out_adjust = None
-        if opt.dropout is not None:
-            self.dropout = nn.Dropout(opt.dropout)
-        else:
-            self.dropout = nn.Identity()
-
 
     def forward(self, x, **kwargs):
         x = self.model.maxpool(self.model.relu(self.model.bn1(self.model.conv1(x))))
@@ -38,9 +31,8 @@ class Network(torch.nn.Module):
             x = layerblock(x)
         no_avg_feat = x
 
-        x = torch.nn.functional.upsample(x, size=(self.r1, self.r1), mode='bilinear', align_corners=True)
-        x = self.dropout(x)
-        x = torch.nn.functional.adaptive_avg_pool2d(x, output_size=(self.r2, self.r2))
+        x = torch.nn.functional.upsample(x, size=(16, 16), mode='bilinear', align_corners=True)
+        x = torch.nn.functional.adaptive_avg_pool2d(x, output_size=(4, 4))
 
         per_point_pred = self.model.last_linear(x)
 
