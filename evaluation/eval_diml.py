@@ -4,32 +4,8 @@ import torch.nn.functional as F
 
 from tqdm import tqdm, trange
 
-from utilities.diml import Sinkhorn
+from utilities.diml import Sinkhorn, calc_similarity
 from evaluation.metrics import get_metrics_rank, get_metrics
-
-def calc_similarity(anchor, anchor_center, fb, fb_center, stage, use_uniform=False):
-    if stage == 0:
-        sim = torch.einsum('c,nc->n', anchor_center, fb_center)
-    else:
-        N, _, R = fb.size()
-
-        sim = torch.einsum('cm,ncs->nsm', anchor, fb).contiguous().view(N, R, R)
-        dis = 1.0 - sim
-        K = torch.exp(-dis / 0.05)
-
-        if use_uniform:
-            u = torch.zeros(N, R, dtype=sim.dtype, device=sim.device).fill_(1. / R)
-            v = torch.zeros(N, R, dtype=sim.dtype, device=sim.device).fill_(1. / R)
-        else:
-            att = F.relu(torch.einsum("c,ncr->nr", anchor_center, fb)).view(N, R)
-            u = att / (att.sum(dim=1, keepdims=True) + 1e-5)
-
-            att = F.relu(torch.einsum("cr,nc->nr", anchor, fb_center)).view(N, R)
-            v = att / (att.sum(dim=1, keepdims=True) + 1e-5)
-
-        T = Sinkhorn(K, u, v)
-        sim = torch.sum(T * sim, dim=(1, 2))
-    return sim
 
 def evaluate(model, dataloader, no_training=True, trunc_nums=None, use_uniform=False, grid_size=4):
     model.eval()
