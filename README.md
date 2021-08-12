@@ -1,6 +1,7 @@
 # DIML
+Created by [Wenliang Zhao](https://thu-jw.github.io/), [Yongming Rao](https://raoyongming.github.io/), Ziyi Wang, [Jiwen Lu](https://scholar.google.com/citations?user=TN8uDQoAAAAJ&hl=en&authuser=1), [Jie Zhou](https://scholar.google.com/citations?user=6a79aPwAAAAJ&hl=en&authuser=1)
 
-This code contains the implementation for paper **Towards Interpretable Deep Metric Learning with Structural Matching**.
+This repository contains PyTorch implementation for paper **Towards Interpretable Deep Metric Learning with Structural Matching**.
 
 ## Usage
 ### Requirement
