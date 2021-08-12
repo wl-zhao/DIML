@@ -1,8 +1,8 @@
-dataset=${2:-cub200}
-bs=${3:-112}
-loss=${4:-margin_diml}
-epochs=${5:-150}
-seed=${6:-0}
+dataset=${1:-cub200}
+bs=${2:-112}
+loss=${3:-margin_diml}
+epochs=${4:-150}
+seed=${5:-0}
 
 python train_diml.py --dataset $dataset --loss $loss --batch_mining distance \
               --group ${dataset}_$loss --seed $seed \
