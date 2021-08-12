@@ -19,7 +19,7 @@ import shutil
 
 import parameters    as par
 import torch.nn.functional as F
-from utilities.diml import Sinkhorn
+from utilities.diml import Sinkhorn, calc_similarity
 
 
 """==================================================================================================="""
@@ -294,30 +294,6 @@ for epoch in range(start_epoch, opt.n_epochs):
     ###
     dataloader = dataloaders['testing']
 
-    def calc_similarity(anchor, anchor_center, fb, fb_center, stage):
-        if stage == 0:
-            sim = torch.einsum('c,nc->n', anchor_center, fb_center)
-        else:
-            N, _, R = fb.size()
-
-            sim = torch.einsum('cm,ncs->nsm', anchor, fb).contiguous().view(N, R, R)
-            dis = 1.0 - sim
-            K = torch.exp(-dis / 0.05)
-
-            if opt.use_uniform:
-                u = torch.zeros(N, R, dtype=sim.dtype, device=sim.device).fill_(1. / R)
-                v = torch.zeros(N, R, dtype=sim.dtype, device=sim.device).fill_(1. / R)
-            else:
-                att = F.relu(torch.einsum("c,ncr->nr", anchor_center, fb)).view(N, R)
-                u = att / (att.sum(dim=1, keepdims=True) + 1e-5)
-
-                att = F.relu(torch.einsum("cr,nc->nr", anchor, fb_center)).view(N, R)
-                v = att / (att.sum(dim=1, keepdims=True) + 1e-5)
-
-            T = Sinkhorn(K, u, v)
-            sim = torch.sum(T * sim, dim=(1, 2))
-        return sim
-
     with torch.no_grad():
         target_labels = []
         feature_bank = []
@@ -356,7 +332,7 @@ for epoch in range(start_epoch, opt.n_epochs):
             trucated_feature_bank = feature_bank[top_idx]
 
             anchor = feature_bank[idx]
-            sim = calc_similarity(anchor, anchor_center, feature_bank[top_idx], feature_bank_center[top_idx], 1)
+            sim = calc_similarity(anchor, anchor_center, feature_bank[top_idx], feature_bank_center[top_idx], 1, opt.use_uniform)
 
             approx_sim = approx_sim[top_idx]
             assert len(approx_sim) == len(sim)
