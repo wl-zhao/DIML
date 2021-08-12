@@ -3,6 +3,8 @@ Created by [Wenliang Zhao](https://thu-jw.github.io/), [Yongming Rao](https://ra
 
 This repository contains PyTorch implementation for paper **Towards Interpretable Deep Metric Learning with Structural Matching**.
 
+![intro](figs/intro.gif)
+
 ## Usage
 ### Requirement
 - python3
