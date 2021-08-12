@@ -3,6 +3,7 @@
 ### Basic Libraries
 import comet_ml
 import warnings
+import logging
 warnings.filterwarnings("ignore")
 
 import os, sys, numpy as np, argparse, imp, datetime, pandas as pd, copy
@@ -110,7 +111,7 @@ opt.n_classes  = len(dataloaders['training'].dataset.avail_classes)
 #################### CREATE LOGGING FILES ###############
 sub_loggers = ['Train', 'Test', 'Model Grad']
 if opt.use_tv_split: sub_loggers.append('Val')
-LOG = logger.LOGGER(opt, sub_loggers=sub_loggers, start_new=True, log_online=opt.log_online)
+LOG = logger.LOGGER(opt, sub_loggers=sub_loggers, start_new=True, log_online=False)
 
 """============================================================================"""
 #################### LOSS SETUP ####################
@@ -158,6 +159,19 @@ best_r1 = 0
 best_rp = 0
 best_mapr = 0
 
+file_handler = logging.FileHandler(filename=os.path.join(opt.save_path, 'log.txt'))
+stdout_handler = logging.StreamHandler(sys.stdout)
+handlers = [file_handler, stdout_handler]
+
+logging.basicConfig(
+    level=logging.INFO, 
+    format='[%(asctime)s] %(levelname)s - %(message)s',
+    handlers=handlers
+)
+
+logger = logging.getLogger('root')
+
+
 for epoch in range(opt.n_epochs):
     epoch_start_time = time.time()
 
@@ -181,6 +195,7 @@ for epoch in range(opt.n_epochs):
 
     loss_collect = []
     data_iterator = tqdm(dataloaders['training'], desc='Epoch {} Training...'.format(epoch))
+    logger.info(f"Epoch {epoch} start")
 
     print(opt.save_path)
 
@@ -301,16 +316,16 @@ for epoch in range(opt.n_epochs):
         for k, v in all_metrics.items():
             LOG.progress_saver['Test'].log(k, v)
 
-        print('saving checkpoint...')
+        logger.info('saving checkpoint...')
         misc.save_checkpoint(model, optimizer, os.path.join(opt.save_path, 'latest.pth'), all_metrics, best_metrics, epoch)
         if is_best:
-            print('saving best checkpoint...')
+            logger.info('saving best checkpoint...')
             shutil.copy2(os.path.join(opt.save_path, 'latest.pth'), os.path.join(opt.save_path, 'best.pth'))
 
 
         print('###########')
-        print('Now rank-1 acc=%f, RP=%f, MAP@R=%f' % (overall_r1, overall_rp, overall_mapr))
-        print('Best rank-1 acc=%f, RP=%f, MAP@R=%f' % (best_r1,  best_rp, best_mapr))
+        logger.info('Now rank-1 acc=%f, RP=%f, MAP@R=%f' % (overall_r1, overall_rp, overall_mapr))
+        logger.info('Best rank-1 acc=%f, RP=%f, MAP@R=%f' % (best_r1,  best_rp, best_mapr))
 
     LOG.update(all=True)
 
