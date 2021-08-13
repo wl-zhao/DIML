@@ -7,7 +7,7 @@ We present a deep interpretable metric learning (DIML) that adopts a structural 
 
 ![intro](figs/intro.gif)
 
-[[arXiv]()]
+[[arXiv](https://arxiv.org/abs/2108.05889)]
 ## Usage
 ### Requirement
 - python3
