@@ -49,3 +49,15 @@ CUDA_VISIBLE_DEVICES=0 ./scripts/diml/train_diml.sh cub200 112 margin_diml 150
 
 ## Acknowledgement
 The code is based on [RevisitDML](https://github.com/Confusezius/Revisiting_Deep_Metric_Learning_PyTorch).
+
+
+## Citation
+If you find our work useful in your research, please consider citing:
+```
+@inproceedings{zhao2021towards,
+  title={Towards Interpretable Deep Metric Learning with Structural Matching},
+  author={Zhao, Wenliang and Rao, Yongming and Wang, Ziyi and Lu, Jiwen and Zhou, Jie},
+  booktitle={ICCV},
+  year={2021}
+}
+```
